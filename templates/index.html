@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Myyntiseuranta</title>
+</head>
+
+<body>
+  <h1>Myyntiseuranta </h1>
+
+  {% if session.username %}
+  <p>Olet kirjautunut nimellä {{ session.username }}, käyttäjä-id {{ session.user_id }}
+  </p>
+  {% endif %}
+  <p>
+    <a href="/login">Kirjaudu sisään</a>
+    <a href="/register">Rekisteröidy</a>
+    <a href="/logout">Kirjaudu ulos</a>
+  </p>
+  <p>
+    <a href="/new_shift">Uusi merkintä </a>
+  </p>

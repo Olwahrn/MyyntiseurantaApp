@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Uusi työvuoro</title>
+</head>
+
+<body>
+  <h1>Uusi työvuoro</h1>
+  <form action="/create_new_shift" method="POST">
+    <p>
+      Sijainti <br />
+      <input type="text" name="location" />
+    </p>
+    <p>
+      Kesto tunneissa<br />
+      <input type="number" name="duration" />
+    </p>
+    <p>
+        Päivämäärä <br />
+        <input type="date" name="date" />
+    </p>
+    <input type="submit" value="Luo työvuoro" />
+  </form>
+</body>
+
+</html>
