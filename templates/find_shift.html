@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Etsi työvuoro</title>
+    </head>
+<body>
+    <h1>Etsi ilmoitus</h1>
+    <form action="/find_shift" method="GET">
+    <p>
+        Hakusana: <input type="text" name="query" value="{{ query }}">
+    </p>
+    <input type="submit" value="Lähetä">
+    </form>
+    {% if query %}
+    <h2>Tulokset</h2>
+    <ul>
+        {% for shift in results %}
+        <li><a href="/shift/{{ shift.id }}">{{ shift.location }}</a></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</body>
+</html>

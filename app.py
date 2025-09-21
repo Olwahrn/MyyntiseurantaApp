@@ -13,6 +13,16 @@ def index():
     shift_list = shifts.get_shifts()
     return render_template("index.html", shifts = shift_list)
 
+@app.route("/find_shift")
+def find_shift():
+    query = request.args.get("query")
+    if query:
+        results = shifts.find_shifts(query)
+    else:
+        query = ""
+        results = []
+    return render_template("find_shift.html", query = query, results=results)
+
 @app.route("/shift/<int:shift_id>")
 def show_shift(shift_id):
     shift = shifts.get_shift(shift_id)
@@ -63,7 +73,6 @@ def remove_shift(shift_id):
             return redirect("/")
         else:
             return redirect("/shift/" + str(shift_id))
-
 
 @app.route("/create", methods=["POST"])
 def create():

@@ -29,3 +29,11 @@ def update_shift(shift_id, location, duration, date):
 def remove_shift(shift_id):
     sql = "DELETE FROM shifts WHERE id = ?"
     db.execute(sql, [shift_id])
+
+def find_shifts(query):
+    sql = """SELECT id, location
+            FROM shifts
+            WHERE location LIKE ?
+            ORDER BY id DESC"""
+    like = "%" + query + "%"
+    return db.query(sql, [like])
