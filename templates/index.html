@@ -21,3 +21,11 @@
     <a href="/new_shift">Uusi merkintä </a>
   </p>
   <h1>Vuorot</h1>
+  <ul>
+    {% for shift in shifts %}
+    <li><a href="/shift/{{ shift.id }}">≈{{ shift.location }}</a></li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
+  

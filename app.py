@@ -10,7 +10,13 @@ app.secret_key = config.secret_key
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    shift_list = shifts.get_shifts()
+    return render_template("index.html", shifts = shift_list)
+
+@app.route("/shift/<int:shift_id>")
+def show_shift(shift_id):
+    shift = shifts.get_shift(shift_id)
+    return render_template("show_shift.html", shift=shift)
 
 @app.route("/new_shift")
 def new_shift():
@@ -18,15 +24,13 @@ def new_shift():
     
 
 @app.route("/create_new_shift", methods=["POST"])
-def create_new_shift():
+def create_shift():
     location = request.form["location"]
     duration = int(request.form["duration"])
     date = request.form["date"]
     user_id = session["user_id"]
 
-    shifts.new_shift(location, duration, date, user_id)
-    sql = """INSERT INTO shifts (location, duration, shift_date, user_id) VALUES (?, ?, ?, ?)"""
-    db.execute(sql, [location, duration , date, user_id])
+    shifts.add_shift(location, duration, date, user_id)
     return redirect("/")
 
 
