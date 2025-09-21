@@ -4,7 +4,7 @@ from flask import redirect, render_template, request, session
 from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
-
+import shifts
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
@@ -23,9 +23,12 @@ def create_new_shift():
     duration = int(request.form["duration"])
     date = request.form["date"]
     user_id = session["user_id"]
+
+    shifts.new_shift(location, duration, date, user_id)
     sql = """INSERT INTO shifts (location, duration, shift_date, user_id) VALUES (?, ?, ?, ?)"""
     db.execute(sql, [location, duration , date, user_id])
     return redirect("/")
+
 
 
 @app.route("/register")
