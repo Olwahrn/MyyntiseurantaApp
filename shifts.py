@@ -25,3 +25,7 @@ def update_shift(shift_id, location, duration, date):
                                 shift_date = ?
                                 WHERE id = ? """
     db.execute(sql, [location, duration, date, shift_id])
+
+def remove_shift(shift_id):
+    sql = "DELETE FROM shifts WHERE id = ?"
+    db.execute(sql, [shift_id])

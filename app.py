@@ -51,6 +51,20 @@ def edit_shift(shift_id):
     shift = shifts.get_shift(shift_id)
     return render_template("edit_shift.html", shift=shift)
 
+@app.route("/remove_shift/<int:shift_id>",  methods=["GET", "POST"])
+def remove_shift(shift_id):
+    if request.method == "GET":
+        shift = shifts.get_shift(shift_id)
+        return render_template("remove_shift.html", shift=shift)
+    
+    if request.method == "POST":
+        if "remove" in request.form:
+            shifts.remove_shift(shift_id)
+            return redirect("/")
+        else:
+            return redirect("/shift/" + str(shift_id))
+
+
 @app.route("/create", methods=["POST"])
 def create():
     username = request.form["username"]

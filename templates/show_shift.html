@@ -10,6 +10,7 @@
     {% if session.user_id == shift.user_id %}
     <p>
         <a href="/edit_shift/{{ shift.id }}">Muokkaa</a>
+        <a href="/remove_shift/{{ shift.id }}">Poista</a>
     </p>
   {% endif %}
     
