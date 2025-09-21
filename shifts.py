@@ -8,11 +8,20 @@ def get_shifts():
     return db.query(sql)
 
 def get_shift(shift_id):
-    sql = """SELECT shifts.location,
+    sql = """SELECT shifts.id,
+                    shifts.location,
                     shifts.duration,
                     shifts.shift_date,
+                    users.id user_id,
                     users.username
             FROM shifts, users
             WHERE shifts.user_id = users.id AND
                   shifts.id = ?"""
     return db.query(sql, [shift_id])[0]
+
+def update_shift(shift_id, location, duration, date):
+    sql = """UPDATE shifts SET location = ?,
+                                duration = ?,
+                                shift_date = ?
+                                WHERE id = ? """
+    db.execute(sql, [location, duration, date, shift_id])

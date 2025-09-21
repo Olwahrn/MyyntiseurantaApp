@@ -7,9 +7,15 @@
 
 <body>
     <h1> {{ shift.location }}</h1>
+    {% if session.user_id == shift.user_id %}
+    <p>
+        <a href="/edit_shift/{{ shift.id }}">Muokkaa</a>
+    </p>
+  {% endif %}
+    
     <p>
         {{ shift.shift_date }}
-    </p>
+        </p>
     <p>
         Työntekijä: {{ shift.username }}
     </p>

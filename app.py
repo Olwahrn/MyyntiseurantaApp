@@ -22,7 +22,6 @@ def show_shift(shift_id):
 def new_shift():
     return render_template("new_shift.html")
     
-
 @app.route("/create_new_shift", methods=["POST"])
 def create_shift():
     location = request.form["location"]
@@ -33,11 +32,24 @@ def create_shift():
     shifts.add_shift(location, duration, date, user_id)
     return redirect("/")
 
+@app.route("/update_shift", methods=["POST"])
+def update_shift():
+    shift_id = request.form["shift_id"]
+    location = request.form["location"]
+    duration = int(request.form["duration"])
+    date = request.form["date"]
 
+    shifts.update_shift(shift_id, location, duration, date)
+    return redirect("/shift/" + str(shift_id))
 
 @app.route("/register")
 def register():
     return render_template("register.html")
+
+@app.route("/edit_shift/<int:shift_id>")
+def edit_shift(shift_id):
+    shift = shifts.get_shift(shift_id)
+    return render_template("edit_shift.html", shift=shift)
 
 @app.route("/create", methods=["POST"])
 def create():

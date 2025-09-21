@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Työvuoron muokkaus</title>
+</head>
+
+<body>
+  <h1>Työvuoron muokkaus</h1>
+  <form action="/update_shift" method="POST">
+    <p>
+      Sijainti <br />
+      <input type="text" name="location" value="{{ shift.location }}"/>
+    </p>
+    <p>
+      Kesto tunneissa<br />
+      <input type="number" name="duration" value="{{ shift.duration }}"/>
+    </p>
+    <p>
+        Päivämäärä <br />
+        <input type="date" name="date" value="{{ shift.shift_date }}"/>
+    </p>
+    <input type="hidden" name="shift_id" value="{{ shift.id }}"/>
+    <input type="submit" value="Päivitä vuoroa" />
+  </form>
+</body>
+</html>
