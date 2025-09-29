@@ -15,4 +15,8 @@
 *Kirjaudu ulos/sisään luodulle tunnukselle Kirjaudu sisään / Kirjaudu ulos painikkeista
 *Luo työvuoro ja asetta sille sijainti, päivämäärä ja kesto "Uusi merkintä" painikkeesta
 *Poista / muokkaa työvuoroa jos olet kirjautunut sisään työvuoron tekijän id:llä
+<<<<<<< HEAD
 *Etsi vuoroja "etsi työvuoro" - painikkeesta sijainnin perusteella.
+=======
+*Etsi vuoroja "etsi työvuoro" - painikkeesta sijainnin perusteella.
+>>>>>>> 8a32404c95f86667dc8f95e1ff5af3002b3315f0
