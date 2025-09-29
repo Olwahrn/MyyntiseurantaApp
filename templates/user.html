@@ -1,0 +1,26 @@
+
+{% block content %}
+<h2>Käyttäjä: {{ user.username }}</h2>
+
+<h3>Tilastot</h3>
+<ul>
+  <li>Vuoroja yhteensä: {{ stats.shift_count or 0 }}</li>
+  <li>Kokonaiskesto: {{ stats.total_duration or 0 }} h</li>
+</ul>
+
+<h3>Käyttäjän vuorot</h3>
+<table>
+  <tr>
+    <th>Päivämäärä</th>
+    <th>Paikka</th>
+    <th>Kesto</th>
+  </tr>
+  {% for shift in shifts %}
+  <tr>
+    <td>{{ shift["shift_date"] }}</td>
+    <td><a href="/shift/{{ shift['id'] }}">{{ shift["location"] }}</a></td>
+    <td>{{ shift["duration"] }} h</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

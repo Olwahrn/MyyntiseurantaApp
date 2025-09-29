@@ -73,6 +73,25 @@ def remove_shift(shift_id):
             return redirect("/")
         else:
             return redirect("/shift/" + str(shift_id))
+        
+@app.route("/user/<int:user_id>")
+def user_page(user_id):
+    sql = "SELECT id, username FROM users WHERE id = ?"
+    user = db.query(sql, [user_id])[0]
+
+    sql_stats = """SELECT COUNT(*) as shift_count, 
+                          SUM(duration) as total_duration 
+                   FROM shifts 
+                   WHERE user_id = ?"""
+    stats = db.query(sql_stats, [user_id])[0]
+
+    sql_shifts = """SELECT id, location, duration, shift_date 
+                    FROM shifts 
+                    WHERE user_id = ? 
+                    ORDER BY shift_date DESC"""
+    user_shifts = db.query(sql_shifts, [user_id])
+
+    return render_template("user.html", user=user, stats=stats, shifts=user_shifts)
 
 @app.route("/create", methods=["POST"])
 def create():
@@ -88,7 +107,6 @@ def create():
         db.execute(sql, [username, password_hash])
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
-
     return "Tunnus luotu"
 
 @app.route("/login", methods=["GET", "POST"])
