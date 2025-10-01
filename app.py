@@ -5,6 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import config
 import db
 import shifts
+import users
 app = Flask(__name__)
 app.secret_key = config.secret_key
 
@@ -26,11 +27,13 @@ def find_shift():
 @app.route("/shift/<int:shift_id>")
 def show_shift(shift_id):
     shift = shifts.get_shift(shift_id)
-    return render_template("show_shift.html", shift=shift)
+    classifications = shifts.get_classifications_for_shift(shift_id)
+    return render_template("show_shift.html", shift=shift, classifications=classifications)
 
 @app.route("/new_shift")
 def new_shift():
-    return render_template("new_shift.html")
+    classifications = shifts.get_classifications_grouped()
+    return render_template("new_shift.html", classifications=classifications)
     
 @app.route("/create_new_shift", methods=["POST"])
 def create_shift():
@@ -39,7 +42,12 @@ def create_shift():
     date = request.form["date"]
     user_id = session["user_id"]
 
-    shifts.add_shift(location, duration, date, user_id)
+    shift_id = shifts.add_shift(location, duration, date, user_id)
+
+    selected_classifications = request.form.getlist("classifications")
+    for classification_id in selected_classifications:
+        shifts.add_classification_to_shift(shift_id, int(classification_id))
+
     return redirect("/")
 
 @app.route("/update_shift", methods=["POST"])
@@ -59,7 +67,9 @@ def register():
 @app.route("/edit_shift/<int:shift_id>")
 def edit_shift(shift_id):
     shift = shifts.get_shift(shift_id)
-    return render_template("edit_shift.html", shift=shift)
+    if not users.can_edit_shift(session["user_id"], shift["user_id"]):
+        return "Ei oikeuksia muokata tätä vuoroa", 403
+
 
 @app.route("/remove_shift/<int:shift_id>",  methods=["GET", "POST"])
 def remove_shift(shift_id):

@@ -1,7 +1,10 @@
 import db 
+from collections import defaultdict
 def add_shift(location, duration, date, user_id):
-    sql = """INSERT INTO shifts (location, duration, shift_date, user_id) VALUES (?, ?, ?, ?)"""
+    sql = """INSERT INTO shifts (location, duration, shift_date, user_id)
+             VALUES (?, ?, ?, ?)"""
     db.execute(sql, [location, duration, date, user_id])
+    return db.last_insert_id()
 
 def get_shifts():
     sql = "SELECT id, location, shift_date, user_id FROM shifts ORDER BY id DESC"
@@ -37,3 +40,28 @@ def find_shifts(query):
             ORDER BY id DESC"""
     like = "%" + query + "%"
     return db.query(sql, [like])
+
+def add_classification_to_shift(shift_id, classification_id):
+    sql = """INSERT OR IGNORE INTO shift_classifications (shift_id, classification_id) VALUES (?, ?)"""
+    db.execute(sql, [shift_id, classification_id])
+
+def get_classifications_for_shift(shift_id):
+    sql = """SELECT c.id, c.name, ct.name as type
+             FROM classifications c
+             JOIN classification_types ct ON c.type_id = ct.id
+             JOIN shift_classifications sc ON sc.classification_id = c.id
+             WHERE sc.shift_id = ?"""
+    return db.query(sql, [shift_id])
+
+def get_all_classifications():
+    sql = """SELECT c.id, c.name, ct.name as type
+             FROM classifications c
+             JOIN classification_types ct ON c.type_id = ct.id"""
+    return db.query(sql)
+
+def get_classifications_grouped():
+    all_classes = get_all_classifications()
+    grouped = defaultdict(list)
+    for c in all_classes:
+        grouped[c["type"]].append(c)
+    return grouped

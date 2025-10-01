@@ -6,23 +6,29 @@
 </head>
 
 <body>
-    <h1> {{ shift.location }}</h1>
-    {% if session.user_id == shift.user_id %}
+  <h1>{{ shift.location }}</h1>
+
+  {% if session.user_id == shift.user_id %}
     <p>
-        <a href="/edit_shift/{{ shift.id }}">Muokkaa</a>
-        <a href="/remove_shift/{{ shift.id }}">Poista</a>
+      <a href="/edit_shift/{{ shift.id }}">Muokkaa</a>
+      <a href="/remove_shift/{{ shift.id }}">Poista</a>
     </p>
   {% endif %}
-    
-    <p>
-        {{ shift.shift_date }}
-        </p>
-    <p>
-        Työntekijä: {{ shift.username }}
-    </p>
-    <p>
-        <a href="/">Takaisin</a>
-    </p>
-</body>
 
+  <p>Päivämäärä: {{ shift.shift_date }}</p>
+  <p>Työntekijä: {{ shift.username }}</p>
+
+  {% if shift.classifications %}
+    <h3>Luokitukset:</h3>
+    <ul>
+      {% for c in shift.classifications %}
+        <li>{{ c.type }}: {{ c.name }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <p>
+    <a href="/">Takaisin</a>
+  </p>
+</body>
 </html>

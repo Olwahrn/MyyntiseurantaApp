@@ -8,19 +8,29 @@
 <body>
   <h1>Uusi työvuoro</h1>
   <form action="/create_new_shift" method="POST">
-    <p>
-      Sijainti <br />
-      <input type="text" name="location" />
-    </p>
-    <p>
-      Kesto tunneissa<br />
-      <input type="number" name="duration" />
-    </p>
-    <p>
-        Päivämäärä <br />
-        <input type="date" name="date" />
-    </p>
-    <input type="submit" value="Luo työvuoro" />
+    <label>Location</label>
+    <input type="text" name="location" required><br>
+
+    <label>Duration</label>
+    <input type="number" name="duration" required><br>
+
+    <label>Date</label>
+    <input type="date" name="date" required><br>
+
+    <h3>Luokitukset</h3>
+    {% for type, items in classifications.items() %}
+      <fieldset>
+        <legend>{{ type }}</legend>
+        {% for c in items %}
+          <label>
+            <input type="checkbox" name="classifications" value="{{ c.id }}">
+            {{ c.name }}
+          </label><br>
+        {% endfor %}
+      </fieldset>
+    {% endfor %}
+
+    <button type="submit">Create Shift</button>
   </form>
 </body>
 </html>
