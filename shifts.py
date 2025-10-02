@@ -42,10 +42,11 @@ def find_shifts(query):
     return db.query(sql, [like])
 
 def add_classification_to_shift(shift_id, classification_id):
+
     sql = """INSERT OR IGNORE INTO shift_classifications (shift_id, classification_id) VALUES (?, ?)"""
     db.execute(sql, [shift_id, classification_id])
-
 def get_classifications_for_shift(shift_id):
+
     sql = """SELECT c.id, c.name, ct.name as type
              FROM classifications c
              JOIN classification_types ct ON c.type_id = ct.id
@@ -54,12 +55,13 @@ def get_classifications_for_shift(shift_id):
     return db.query(sql, [shift_id])
 
 def get_all_classifications():
+
     sql = """SELECT c.id, c.name, ct.name as type
              FROM classifications c
              JOIN classification_types ct ON c.type_id = ct.id"""
     return db.query(sql)
-
 def get_classifications_grouped():
+
     all_classes = get_all_classifications()
     grouped = defaultdict(list)
     for c in all_classes:

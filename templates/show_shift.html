@@ -27,6 +27,19 @@
     </ul>
   {% endif %}
 
+  <h2>Lisätiedot</h2>
+  <form action="{{ url_for('add_note', shift_id=shift.id) }}" method="POST">
+    <textarea name="note" required placeholder="Kirjoita lisätieto..."></textarea>
+    <button type="submit">Lisää lisätieto</button>
+  </form>
+
+  <h3>Lisätiedot:</h3>
+  <ul>
+    {% for note in notes %}
+      <li>{{ note.note }} - {{ note.username }} ({{ note.created_at }})</li>
+    {% endfor %}
+  </ul>
+
   <p>
     <a href="/">Takaisin</a>
   </p>

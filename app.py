@@ -28,7 +28,10 @@ def find_shift():
 def show_shift(shift_id):
     shift = shifts.get_shift(shift_id)
     classifications = shifts.get_classifications_for_shift(shift_id)
-    return render_template("show_shift.html", shift=shift, classifications=classifications)
+    sql_notes = "SELECT n.note, n.created_at, u.username FROM shift_notes n JOIN users u ON n.user_id = u.id WHERE n.shift_id = ?"
+    notes = db.query(sql_notes, [shift_id])
+
+    return render_template("show_shift.html", shift=shift, classifications=classifications, notes=notes)
 
 @app.route("/new_shift")
 def new_shift():
@@ -37,6 +40,9 @@ def new_shift():
     
 @app.route("/create_new_shift", methods=["POST"])
 def create_shift():
+    user_id = session.get("user_id")
+    if not user_id:
+        return redirect("/login")
     location = request.form["location"]
     duration = int(request.form["duration"])
     date = request.form["date"]
@@ -146,3 +152,13 @@ def logout():
     del session["user_id"]
     return redirect("/")
 
+@app.route("/add_note/<int:shift_id>", methods=["POST"])
+def add_note(shift_id):
+    note = request.form["note"]
+    user_id = session["user_id"]
+
+    sql = """INSERT INTO shift_notes (shift_id, user_id, note)
+             VALUES (?, ?, ?)"""
+    db.execute(sql, [shift_id, user_id, note])
+
+    return redirect(f"/shift/{shift_id}")
