@@ -29,6 +29,7 @@
 
   <h2>Lisätiedot</h2>
   <form action="{{ url_for('add_note', shift_id=shift.id) }}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <textarea name="note" required placeholder="Kirjoita lisätieto..."></textarea>
     <button type="submit">Lisää lisätieto</button>
   </form>

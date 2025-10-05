@@ -6,8 +6,14 @@ import config
 import db
 import shifts
 import users
+import secrets
+from flask import abort, request, session
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def check_csrf():
+    if session.get("csrf_token") != request.form.get("csrf_token"):
+        abort(403)
 
 @app.route("/")
 def index():
@@ -40,6 +46,7 @@ def new_shift():
     
 @app.route("/create_new_shift", methods=["POST"])
 def create_shift():
+    check_csrf()
     user_id = session.get("user_id")
     if not user_id:
         return redirect("/login")
@@ -58,6 +65,7 @@ def create_shift():
 
 @app.route("/update_shift", methods=["POST"])
 def update_shift():
+    check_csrf()
     shift_id = request.form["shift_id"]
     location = request.form["location"]
     duration = int(request.form["duration"])
@@ -84,6 +92,7 @@ def remove_shift(shift_id):
         return render_template("remove_shift.html", shift=shift)
     
     if request.method == "POST":
+        check_csrf()
         if "remove" in request.form:
             shifts.remove_shift(shift_id)
             return redirect("/")
@@ -123,7 +132,7 @@ def create():
         db.execute(sql, [username, password_hash])
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
-    return "Tunnus luotu"
+    return redirect("/")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -134,14 +143,18 @@ def login():
         username = request.form["username"]
         password = request.form["password"]
         
-        sql = "SELECT id, password_hash FROM users WHERE username = ?"
-        result = db.query(sql, [username])[0]
+        results = db.query("SELECT id, password_hash FROM users WHERE username = ?", [username])
+        if not results:
+            return "VIRHE: käyttäjää ei löytynyt"
+        
+        result = results[0]
         user_id = result["id"]
         password_hash = result["password_hash"]
 
         if check_password_hash(password_hash, password):
             session["user_id"] = user_id
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             return "VIRHE: väärä tunnus tai salasana"
@@ -154,6 +167,7 @@ def logout():
 
 @app.route("/add_note/<int:shift_id>", methods=["POST"])
 def add_note(shift_id):
+    check_csrf()
     note = request.form["note"]
     user_id = session["user_id"]
 

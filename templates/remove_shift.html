@@ -8,6 +8,7 @@
   <p>Ilmoitus: {{ shift.location }} - {{ shift.shift_date }}</p>
   <p>Haluatko varmasti poistaa ilmoituksen?</p>
   <form action="/remove_shift/{{ shift.id }}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" name="remove" value= "Poista työvuoro">
     <input type="submit" name="back" value= "Palaa takaisin">
   </form>

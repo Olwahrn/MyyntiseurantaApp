@@ -8,6 +8,7 @@
 <body>
   <h1>Uusi työvuoro</h1>
   <form action="/create_new_shift" method="POST">
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <label>Location</label>
     <input type="text" name="location" required><br>
 
