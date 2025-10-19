@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Myyntiseuranta{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Myyntiseuranta</h1>
+    <nav>
+      <a href="/">Etusivu</a>
+      <a href="/find_shift">Etsi</a>
+      {% if session.username %}
+        <a href="/user/{{ session.user_id }}">Profiili</a>
+        <a href="/logout">Kirjaudu ulos</a>
+      {% else %}
+        <a href="/login">Kirjaudu</a>
+        <a href="/register">Rekisteröidy</a>
+      {% endif %}
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    <p>© 2025 MyyntiseurantaApp</p>
+  </footer>
+</body>
+</html>

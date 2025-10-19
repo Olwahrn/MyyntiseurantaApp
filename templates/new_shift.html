@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Uusi työvuoro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-  <h1>Uusi työvuoro</h1>
-  <form action="/create_new_shift" method="POST">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <label>Location</label>
-    <input type="text" name="location" required><br>
+  <div class="container">
+    <h1>Uusi työvuoro</h1>
 
-    <label>Duration</label>
-    <input type="number" name="duration" required><br>
+    <form action="/create_new_shift" method="POST">
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
 
-    <label>Date</label>
-    <input type="date" name="date" required><br>
+      <label>Sijainti</label>
+      <input type="text" name="location" required>
 
-    <h3>Luokitukset</h3>
-    {% for type, items in classifications.items() %}
-      <fieldset>
-        <legend>{{ type }}</legend>
-        {% for c in items %}
-          <label>
-            <input type="checkbox" name="classifications" value="{{ c.id }}">
-            {{ c.name }}
-          </label><br>
-        {% endfor %}
-      </fieldset>
-    {% endfor %}
+      <label>Kesto (tunnit)</label>
+      <input type="number" name="duration" required>
 
-    <button type="submit">Create Shift</button>
-  </form>
+      <label>Päivämäärä</label>
+      <input type="date" name="date" required>
+
+      <h3>Luokitukset</h3>
+      {% for type, items in classifications.items() %}
+        <fieldset>
+          <legend>{{ type }}</legend>
+          {% for c in items %}
+            <label><input type="checkbox" name="classifications" value="{{ c.id }}"> {{ c.name }}</label><br>
+          {% endfor %}
+        </fieldset>
+      {% endfor %}
+
+      <button type="submit">Luo vuoro</button>
+    </form>
+
+    <p class="mt-3"><a href="/">Palaa etusivulle</a></p>
+  </div>
 </body>
 </html>

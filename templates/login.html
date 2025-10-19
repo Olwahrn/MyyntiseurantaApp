@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Kirjautuminen</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-  {% if session.username %}
-  <p>
-    Olet kirjautunut nimellä {{ session.username }}
-  </p>
-  <p>
-    <a href="/logout">Kirjaudu ulos</a>
-  </p>
-  {% else %}
-  <form action="/login" method="POST">
-    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
-    <p>
-      Tunnus: <br />
-      <input type="text" name="username" />
-    </p>
-    <p>
-      Salasana: <br />
-      <input type="password" name="password" />
-    </p>
-    <input type="submit" value="Kirjaudu" />
-  </form>
-  {% endif %}
-</body>
+  <div class="container">
+    <h1>Kirjautuminen</h1>
 
+    {% if session.username %}
+      <p>Olet kirjautunut nimellä <strong>{{ session.username }}</strong>.</p>
+      <a href="/">Palaa etusivulle</a> |
+      <a href="/logout">Kirjaudu ulos</a>
+    {% else %}
+      <form action="/login" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <label>Tunnus</label>
+        <input type="text" name="username" required>
+
+        <label>Salasana</label>
+        <input type="password" name="password" required>
+
+        <input type="submit" value="Kirjaudu">
+      </form>
+
+      <p class="mt-3"><a href="/">Palaa etusivulle</a></p>
+    {% endif %}
+  </div>
+</body>
 </html>

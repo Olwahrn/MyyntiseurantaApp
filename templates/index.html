@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <title>Myyntiseuranta</title>
+  <title>Etusivu</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-  <h1>Myyntiseuranta </h1>
+  <div class="container">
+    <h1>Myyntiseuranta</h1>
 
-  {% if session.username %}
-  <p>Olet kirjautunut nimellä {{ session.username }}, käyttäjä-id {{ session.user_id }}
-    <a href="/user/{{ session['user_id'] }}">Oma sivu</a>
-  </p>
-  {% endif %}
-  <p>
-    <a href="/login">Kirjaudu sisään</a>
-    <a href="/register">Rekisteröidy</a>
-    <a href="/logout">Kirjaudu ulos</a>
-  </p>
-  <p>
-    <a href="/new_shift">Uusi merkintä </a>
-    <a href="find_shift">Etsi työvuoro</a>
-  </p>
-  <h1>Vuorot</h1>
-  <ul>
-    {% for shift in shifts %}
-    <li><a href="/shift/{{ shift.id }}">≈{{ shift.location }}</a></li>
-    {% endfor %}
-  </ul>
+    {% if session.username %} 
+      <p>Tervetuloa, {{ session.username }}!</p>
+      <p>
+        <a href="/logout">Kirjaudu ulos</a> |
+        <a href="/new_shift">Lisää uusi työvuoro</a> |
+        <a href="/find_shift">Etsi työvuoroja</a> |
+        <a href="/user/{{ session.user_id }}">Oma sivu</a>
+      </p>
+    {% else %}
+      <p><a href="/login">Kirjaudu sisään</a> tai <a href="/register">Luo tunnus</a></p>
+    {% endif %}
+
+    <h2>Työvuorot</h2>
+    <ul>
+      {% for shift in shifts %}
+        <li><a href="/shift/{{ shift.id }}">{{ shift.location }} – {{ shift.shift_date }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
 </body>
 </html>
-  
