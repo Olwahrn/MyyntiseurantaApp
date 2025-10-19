@@ -6,8 +6,12 @@
 </head>
 
 <body>
+  {% if error %}
+  <p class="error">{{ error }}</p>
+  {% endif %}
   <div class="container">
     <h1>Kirjautuminen</h1>
+    <p>Ei vielä tunnusta? <a href="/register">Luo tunnus</a></p>
 
     {% if session.username %}
       <p>Olet kirjautunut nimellä <strong>{{ session.username }}</strong>.</p>

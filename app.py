@@ -34,8 +34,7 @@ def find_shift():
 def show_shift(shift_id):
     shift = shifts.get_shift(shift_id)
     classifications = shifts.get_classifications_for_shift(shift_id)
-    sql_notes = "SELECT n.note, n.created_at, u.username FROM shift_notes n JOIN users u ON n.user_id = u.id WHERE n.shift_id = ?"
-    notes = db.query(sql_notes, [shift_id])
+    notes = shifts.get_shift_notes(shift_id)
 
     return render_template("show_shift.html", shift=shift, classifications=classifications, notes=notes)
 
@@ -82,8 +81,8 @@ def register():
 def edit_shift(shift_id):
     shift = shifts.get_shift(shift_id)
     if not users.can_edit_shift(session["user_id"], shift["user_id"]):
-        return "Ei oikeuksia muokata tätä vuoroa", 403
-
+        return "Sinulla ei ole muokkausoikeuksia tähän vuoroon", 403
+    return render_template("edit_shift.html", shift=shift)
 
 @app.route("/remove_shift/<int:shift_id>",  methods=["GET", "POST"])
 def remove_shift(shift_id):
@@ -115,50 +114,53 @@ def user_page(user_id):
                     WHERE user_id = ? 
                     ORDER BY shift_date DESC"""
     user_shifts = db.query(sql_shifts, [user_id])
-
     return render_template("user.html", user=user, stats=stats, shifts=user_shifts)
 
 @app.route("/create", methods=["POST"])
+@app.route("/create", methods=["POST"])
 def create():
+    check_csrf()
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
-    if password1 != password2:
-        return "VIRHE: salasanat eivät ole samat"
-    password_hash = generate_password_hash(password1)
 
-    try:
-        sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-        db.execute(sql, [username, password_hash])
-    except sqlite3.IntegrityError:
-        return "VIRHE: tunnus on jo varattu"
-    return redirect("/")
+    if len(username) < 3:
+        return render_template("register.html", error="Käyttäjätunnuksen tulee olla vähintään 3 merkkiä pitkä")
+    
+    if len(password1) < 3:
+        return render_template("register.html", error="Salasanan tulee olla vähintään 3 merkkiä pitkä")
+    
+    if password1 != password2:
+        return render_template("register.html", error="Salasanat eivät täsmää")
+    
+    if users.username_exists(username):
+        return render_template("register.html", error="Käyttäjänimi varattu")
+
+    password_hash = generate_password_hash(password1)
+    users.create_user(username, password_hash)
+
+    return redirect("/login")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         return render_template("login.html")
     
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-        
-        results = db.query("SELECT id, password_hash FROM users WHERE username = ?", [username])
-        if not results:
-            return "VIRHE: käyttäjää ei löytynyt"
-        
-        result = results[0]
-        user_id = result["id"]
-        password_hash = result["password_hash"]
+    username = request.form["username"]
+    password = request.form["password"]
 
-        if check_password_hash(password_hash, password):
-            session["user_id"] = user_id
-            session["username"] = username
-            session["csrf_token"] = secrets.token_hex(16)
-            return redirect("/")
-        else:
-            return "VIRHE: väärä tunnus tai salasana"
-
+    user = users.get_user_by_username(username)
+    if not user:
+        return render_template("login.html", error="Käyttäjää ei löytynyt")
+    
+    if check_password_hash(user["password_hash"], password):
+        session["user_id"] = user["id"]
+        session["username"] = username
+        session["csrf_token"] = secrets.token_hex(16)
+        return redirect("/")
+    else:
+        return render_template("login.html", error="Väärä käyttäjätunnus tai salasana")
+    
 @app.route("/logout")
 def logout():
     del session["username"]

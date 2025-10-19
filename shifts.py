@@ -60,10 +60,17 @@ def get_all_classifications():
              FROM classifications c
              JOIN classification_types ct ON c.type_id = ct.id"""
     return db.query(sql)
-def get_classifications_grouped():
 
+def get_classifications_grouped():
     all_classes = get_all_classifications()
     grouped = defaultdict(list)
     for c in all_classes:
         grouped[c["type"]].append(c)
     return grouped
+
+def get_shift_notes(shift_id):
+    sql = """SELECT n.note, n.created_at, u.username
+             FROM shift_notes n
+             JOIN users u ON n.user_id = u.id
+             WHERE n.shift_id = ?"""
+    return db.query(sql, [shift_id])
