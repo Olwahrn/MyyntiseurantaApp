@@ -1,22 +1,26 @@
 # Myyntiseuranta
-# Myyntiseuranta
 
-* Käyttäjä pystyy luomaan tunnarit ja kirjautumaan sovellukseen
-* Käyttäjä pystyy lisäämään, muokkaamaan ja poistamaan tavoitteita, toteutuneita myyntimääriä ja myyntikohteita päivittäisellä tasolla
-* Käyttäjä pystyy etsimään tietokohteita lokaation perusteella
-* Käyttäjä pystyy asettaa luokittelun tietokohteelle
-* Käyttäjä näkee omat ja muiden lisäämät myyntimäärät, tavoitteet sekä paikat
-* Sovelluksessa on käyttäjäsivu joka näyttää toteutuneet myynnit päivä-, kuukausi- ja vuositasolla, sekä omat tulevat tavoitteet ja myyntipaikat
- Käyttäjä pystyy pyytää vaihtoa toisen henkilön kanssa tuleviin vuoroihin
+Käyttäjä voi luoda tunnuksen ja kirjautua sisään.
+Käyttäjä voi lisätä, muokata ja poistaa omia työvuorojaan.
+Jokaiselle työvuorolle voi valita yhden tai useamman luokituksen (esim. vuorotyyppi).
+Käyttäjä voi lisätä muistiinpanoja omiin työvuoroihinsa.
+Käyttäjä voi selata ja hakea työvuoroja hakusanan perusteella.
+Käyttäjäsivu näyttää:
+Käyttäjän omat vuorot
+Tilastoja (vuorojen määrä ja kokonaistunnit)
 
+Käyttöohjeet:
 
-*TESTAUS
-*Luo tunnus "Rekisteröidy" napista.
-*Kirjaudu ulos/sisään luodulle tunnukselle Kirjaudu sisään / Kirjaudu ulos painikkeista
-*Luo työvuoro ja asetta sille sijainti, päivämäärä ja kesto "Uusi merkintä" painikkeesta
-*Poista / muokkaa työvuoroa jos olet kirjautunut sisään työvuoron tekijän id:llä
-<<<<<<< HEAD
-*Etsi vuoroja "etsi työvuoro" - painikkeesta sijainnin perusteella.
-=======
-*Etsi vuoroja "etsi työvuoro" - painikkeesta sijainnin perusteella.
->>>>>>> 8a32404c95f86667dc8f95e1ff5af3002b3315f0
+Jos flask puuttuu, komentorivillä: pip install flask
+
+Tiedostossa schema.sql on taulujen määrrittelyt. 
+SQLite3 käyttämällä saat tietokannan toimintaan komentorivillä repositoriossa: 
+sqlite3 database.db < schema.sql
+
+Käynnistä appi Flaskilla komentorivillä:
+
+python3 -m venv venv
+source venv/bin/activate
+flask run
+
+Avaa selaimessa osoite http://127.0.0.1:5000
